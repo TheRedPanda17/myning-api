@@ -1,0 +1,10 @@
+aiohttp
+aiohttp_cors
+aiopg
+asyncio
+black
+gunicorn
+isort
+psycopg2-binary
+pyyaml
+yoyo-migrations
