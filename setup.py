@@ -1,23 +1,8 @@
-import os
-import re
-
 from setuptools import find_packages, setup
 
 
-REGEXP = re.compile(r"^__version__\W*=\W*'([\d.abrc]+)'")
-
-
 def read_version():
-    init_py = os.path.join(os.path.dirname(__file__), "story", "__init__.py")
-
-    with open(init_py) as f:
-        for line in f:
-            match = REGEXP.match(line)
-            if match is not None:
-                return match.group(1)
-        else:
-            msg = f"Cannot find version in ${init_py}"
-            raise RuntimeError(msg)
+    return "0.0.1"
 
 
 install_requires = [
