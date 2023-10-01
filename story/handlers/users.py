@@ -1,8 +1,8 @@
-import base64
-
 from aiohttp import web
 
 from story import database
+from story.utils.auth import authed
+from story.utils.errors import wrap_errors
 
 
 async def create_user(request: web.Request):
@@ -22,7 +22,7 @@ async def create_user(request: web.Request):
         errors.append("'password' must not be empty")
 
     if errors:
-        return web.json_response(data={"errors": errors}, status=400)
+        return wrap_errors(errors)
 
     result = await database.users.create_user(name=name, password=password)
     if not result:
@@ -34,12 +34,16 @@ async def create_user(request: web.Request):
     return web.json_response(data=result, status=200)
 
 
-async def update_user(request: web.Request):
+@authed
+async def update_user(request: web.Request, auth_id: int):
     _id = request.path_qs.split("/")[-1]
     if _id.isdigit():
         _id = int(_id)
     else:
-        return web.json_response(data={"erros": ["'id' must be an integer"]})
+        return wrap_errors("'id' must be an integer")
+
+    if auth_id != _id:
+        return wrap_errors("You do not have access to this resource", status=403)
 
     user = await database.users.get_user(_id)
     if not user:
@@ -52,8 +56,8 @@ async def update_user(request: web.Request):
     if not name:
         errors.append("'name' must not be empty")
     else:
-        exists = await database.users.get_user_by_name(name)
-        if exists:
+        user = await database.users.get_user_by_name(name)
+        if user and user["id"] != _id:
             errors.append(f"The name '{name}' is already taken")
 
     password = content.get("password")
@@ -61,7 +65,7 @@ async def update_user(request: web.Request):
         errors.append("'password' must not be empty")
 
     if errors:
-        return web.json_response(data={"errors": errors}, status=400)
+        return wrap_errors(errors)
 
     result = await database.users.update_user(_id=_id, name=name, password=password)
     if not result:

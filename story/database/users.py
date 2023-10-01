@@ -61,7 +61,7 @@ async def get_user_by_name(name: str):
 async def get_users():
     conn = await database.POOLS["default"].acquire()
     async with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
-        sql = "SELECT name, created_dt, updated_dt FROM users;"
+        sql = "SELECT id, name, created_dt, updated_dt FROM users;"
 
         try:
             await cursor.execute(sql)
