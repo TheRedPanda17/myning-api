@@ -18,7 +18,6 @@ def authed(func):
 
         try:
             auth = BasicAuth.decode(encoded)
-            print(auth)
         except Exception as e:
             print(e)
             return web.json_response(status=401, data="Invalid Authorization header")
@@ -33,3 +32,28 @@ def authed(func):
         return await func(request, auth_id=user["id"], *args, **kwargs)
 
     return wrapper
+
+def permissioned(permissions: str | list[str]):
+    if isinstance(permissions, str):
+        permissions = [permissions]
+
+    def decorator(func):
+        """Permissions decorator function."""
+
+        @functools.wraps(func)
+        async def wrapper(request: web.Request, auth_id: int, *args, **kwargs):
+            """Check permissions"""
+
+            user_permissions = await database.permissions.get_user_permissions(auth_id)
+            user_permissions = [permission["name"] for permission in user_permissions]
+            if user_permissions is None:
+                return web.json_response(status=500)
+            
+            for permission in permissions:
+                if permission not in user_permissions:
+                    return wrap_errors("You do not have access to this", status=403)   
+
+            return await func(request, auth_id=auth_id, *args, **kwargs)
+
+        return wrapper
+    return decorator

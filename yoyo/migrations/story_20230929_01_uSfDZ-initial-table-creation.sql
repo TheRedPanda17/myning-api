@@ -8,4 +8,4 @@ CREATE TABLE "users" (
   "updated_dt" timestamptz
 );
 
-ALTER TABLE "users" ADD CONSTRAINT unique_names UNIQUE ("name");
+ALTER TABLE "users" ADD CONSTRAINT users_unique_names UNIQUE ("name");

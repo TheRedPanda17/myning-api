@@ -1,19 +1,21 @@
 version: '3.2'
 
 services:
-  postgres:
-      image: postgres:14
-      volumes:
-      - ./:/app/yoyo/init/user.sql
-      environment:
-          - POSTGRES_USER=dev
-          - POSTGRES_PASSWORD=pass
-          - POSTGRES_DB=story
-      ports:
-      - 5432:5432
+  db:
+    container_name: story_db
+    environment:
+        POSTGRES_DB: story
+        POSTGRES_USER: postgres
+        POSTGRES_HOST_AUTH_METHOD: trust
+    image: postgres:14
+    volumes:
+      - ./yoyo/init:/docker-entrypoint-initdb.d
+    ports:
+    - 5432:5432
 
 
   story:
+    restart: always
     build: .
     volumes:
       - ./:/app
@@ -21,7 +23,7 @@ services:
     ports:
       - 8080:8080
     depends_on:
-      - postgres
+      - db
 
 
 volumes:
