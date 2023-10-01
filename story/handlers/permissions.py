@@ -2,6 +2,8 @@ from aiohttp import web
 
 from story import database
 from story.utils.auth import authed, permissioned
+from story.utils.errors import wrap_errors
+
 
 @authed
 @permissioned("view_permissions")

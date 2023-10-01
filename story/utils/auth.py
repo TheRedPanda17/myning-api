@@ -33,6 +33,7 @@ def authed(func):
 
     return wrapper
 
+
 def permissioned(permissions: str | list[str]):
     if isinstance(permissions, str):
         permissions = [permissions]
@@ -48,12 +49,13 @@ def permissioned(permissions: str | list[str]):
             user_permissions = [permission["name"] for permission in user_permissions]
             if user_permissions is None:
                 return web.json_response(status=500)
-            
+
             for permission in permissions:
                 if permission not in user_permissions:
-                    return wrap_errors("You do not have access to this", status=403)   
+                    return wrap_errors("You do not have access to this", status=403)
 
             return await func(request, auth_id=auth_id, *args, **kwargs)
 
         return wrapper
+
     return decorator
