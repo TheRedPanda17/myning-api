@@ -1,8 +1,8 @@
 from aiohttp import web
 
-from story import database
-from story.utils.auth import authed
-from story.utils.errors import wrap_errors
+from myning import database
+from myning.utils.auth import authed
+from myning.utils.errors import wrap_errors
 
 
 async def create_user(request: web.Request):

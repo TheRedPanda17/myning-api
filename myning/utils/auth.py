@@ -1,8 +1,8 @@
 import functools
 from aiohttp import BasicAuth, web
-from story import database
+from myning import database
 
-from story.utils.errors import wrap_errors
+from myning.utils.errors import wrap_errors
 
 
 def authed(func):

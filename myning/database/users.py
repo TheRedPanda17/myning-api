@@ -1,5 +1,5 @@
 import psycopg2
-from story import database
+from myning import database
 
 
 async def create_user(name: str, password: str):

@@ -1,5 +1,5 @@
 -- Add permissions
--- depends: story_20230929_01_uSfDZ-initial-table-creation
+-- depends: myning_20230929_01_uSfDZ-initial-table-creation
 
 
 CREATE TABLE "permissions" (

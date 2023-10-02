@@ -1,7 +1,7 @@
 from aiohttp import web
 import psycopg2
 
-from story import database
+from myning import database
 
 
 async def ping(_):

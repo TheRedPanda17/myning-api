@@ -1,8 +1,8 @@
 from aiohttp import web
 
-from story import database
-from story.utils.auth import authed, permissioned
-from story.utils.errors import wrap_errors
+from myning import database
+from myning.utils.auth import authed, permissioned
+from myning.utils.errors import wrap_errors
 
 
 @authed

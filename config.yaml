@@ -3,4 +3,4 @@ postgres:
   port: 5432
   user: dev
   password: pass
-  database: story
+  database: myning

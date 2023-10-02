@@ -1,7 +1,7 @@
 from aiohttp import web
-from story.routes import init_routes
-from story.config import get_config
-from story import database
+from myning.routes import init_routes
+from myning.config import get_config
+from myning import database
 
 
 def init_config(app: web.Application, argv=None) -> None:

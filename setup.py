@@ -35,7 +35,7 @@ install_requires = [
 
 
 setup(
-    name="story",
+    name="myning",
     version=read_version(),
     description="An API of stories",
     platforms=["POSIX"],

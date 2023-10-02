@@ -2,9 +2,9 @@ version: '3.2'
 
 services:
   db:
-    container_name: story_db
+    container_name: myning_db
     environment:
-        POSTGRES_DB: story
+        POSTGRES_DB: myning
         POSTGRES_USER: postgres
         POSTGRES_HOST_AUTH_METHOD: trust
     image: postgres:14
@@ -14,12 +14,12 @@ services:
     - 5432:5432
 
 
-  story:
+  myning:
     restart: always
     build: .
     volumes:
       - ./:/app
-    command: gunicorn story.app:app -b :8080 --worker-class aiohttp.GunicornWebWorker --reload --access-logfile -
+    command: gunicorn myning.app:app -b :8080 --worker-class aiohttp.GunicornWebWorker --reload --access-logfile -
     ports:
       - 8080:8080
     depends_on:

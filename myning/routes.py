@@ -1,4 +1,4 @@
-from story.handlers import monitoring, users, permissions, users_permissions
+from myning.handlers import monitoring, users, permissions, users_permissions
 
 
 def init_routes(app):

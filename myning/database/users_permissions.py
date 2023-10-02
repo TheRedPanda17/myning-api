@@ -1,5 +1,5 @@
 import psycopg2
-from story import database
+from myning import database
 
 
 async def create_user_permission(permission_id: str, user_id: int, created_by: int):
