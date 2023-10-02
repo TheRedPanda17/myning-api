@@ -28,6 +28,18 @@ async def get_permissions():
             return None
 
 
+async def get_permission(_id: int):
+    conn = await database.POOLS["default"].acquire()
+    async with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
+        sql = "SELECT * FROM permissions WHERE id = %(id)s;"
+
+        try:
+            await cursor.execute(sql, {"id": _id})
+            return await cursor.fetchone()
+        except (psycopg2.DataError, psycopg2.IntegrityError) as e:
+            print(e)
+            return None
+
 
 async def get_permission_by_name(name: str):
     conn = await database.POOLS["default"].acquire()
@@ -41,6 +53,7 @@ async def get_permission_by_name(name: str):
             print(e)
             return None
 
+
 async def get_user_permissions(user_id: int):
     conn = await database.POOLS["default"].acquire()
     async with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
@@ -48,7 +61,8 @@ async def get_user_permissions(user_id: int):
         SELECT p.name, up.created_dt, up.created_by
         FROM users_permissions AS up 
         JOIN permissions AS p on up.permission_id = p.id
-        WHERE user_id = %(user_id)s;"""
+        WHERE user_id = %(user_id)s AND revoked_dt IS NULL;
+        """
 
         try:
             await cursor.execute(sql, {"user_id": user_id})

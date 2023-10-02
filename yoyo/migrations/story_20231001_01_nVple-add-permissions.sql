@@ -28,6 +28,7 @@ ALTER TABLE "permissions" ADD CONSTRAINT "permissions_unique_names" UNIQUE ("nam
 
 INSERT INTO "permissions" VALUES(DEFAULT, 'view_permissions', NOW(), NOW());
 INSERT INTO "permissions" VALUES(DEFAULT, 'grant_users_permissions', NOW(), NOW());
+INSERT INTO "permissions" VALUES(DEFAULT, 'revoke_users_permissions', NOW(), NOW());
 INSERT INTO "permissions" VALUES(DEFAULT, 'view_users_permissions', NOW(), NOW());
 
 INSERT INTO "users" VALUES(DEFAULT, 'Admin', 'change_this', NOW(), NOW());
@@ -35,3 +36,4 @@ INSERT INTO "users" VALUES(DEFAULT, 'Admin', 'change_this', NOW(), NOW());
 INSERT INTO "users_permissions" (permission_id, user_id, created_by, created_dt) VALUES(1, 1, 1, NOW());
 INSERT INTO "users_permissions" (permission_id, user_id, created_by, created_dt) VALUES(2, 1, 1, NOW());
 INSERT INTO "users_permissions" (permission_id, user_id, created_by, created_dt) VALUES(3, 1, 1, NOW());
+INSERT INTO "users_permissions" (permission_id, user_id, created_by, created_dt) VALUES(4, 1, 1, NOW());
