@@ -32,3 +32,16 @@ async def create_season(name: str, start_dt, end_dt):
         except (psycopg2.DataError, psycopg2.IntegrityError) as e:
             print(e)
             return None
+
+
+async def get_season(_id: int):
+    conn = await database.POOLS["default"].acquire()
+    async with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
+        sql = "SELECT * FROM seasons WHERE id = %(id)s;"
+
+        try:
+            await cursor.execute(sql, {"id": _id})
+            return await cursor.fetchone()
+        except (psycopg2.DataError, psycopg2.IntegrityError) as e:
+            print(e)
+            return None

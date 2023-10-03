@@ -1,10 +1,10 @@
 dev:
   postgres:
-    db: myning
     host: db
     port: 5432
     user: dev
+    database: myning
 
 prod:
   postgres:
-    db: myning
+    database: myning
