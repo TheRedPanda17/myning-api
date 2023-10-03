@@ -11,14 +11,13 @@ async def init(
     port=None,
     host=None,
     user=None,
-    password=None,
     database=None,
     dsn=None,
     min_pool_size=1,
     max_pool_size=0,
     conn_timeout=5,
 ):
-    dsn = f"dbname={database} user={user} password={password} host={host} port={port}"
+    dsn = f"dbname={database} user={user} host={host} port={port}"
 
     async with asyncio.Lock():
         POOLS[database] = await aiopg.create_pool(

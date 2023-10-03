@@ -8,7 +8,7 @@ venv:
 	pip install -r requirements.txt
 
 psql:
-	psql -U dev -h localhost myning
+	psql -U opc -h localhost myning
 
 db-migrate:
 	yoyo apply -c yoyo/${api_env}.ini

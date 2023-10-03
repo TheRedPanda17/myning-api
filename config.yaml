@@ -1,6 +1,5 @@
 postgres:
   host: db
   port: 5432
-  user: dev
-  password: pass
+  user: opc
   database: myning
