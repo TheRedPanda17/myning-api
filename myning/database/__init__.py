@@ -17,7 +17,9 @@ async def init(
     max_pool_size=0,
     conn_timeout=5,
 ):
-    dsn = f"dbname={database} user={user} host={host}"
+    dsn = f"dbname={database} user={user}"
+    if host:
+        dsn += f" host={host}"
     if port:
         dsn += f" port={port}"
 
