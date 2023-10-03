@@ -71,8 +71,6 @@ async def update_user(request: web.Request, auth_id: int):
     if not result:
         return web.json_response(status=500)
 
-    print("RESULT")
-    print(result)
     result["created_dt"] = str(result["created_dt"])
     result["updated_dt"] = str(result["updated_dt"])
 

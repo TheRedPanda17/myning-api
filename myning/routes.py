@@ -1,4 +1,4 @@
-from myning.handlers import monitoring, users, permissions, users_permissions
+from myning.handlers import monitoring, users, permissions, users_permissions, seasons
 
 
 def init_routes(app):
@@ -23,3 +23,7 @@ def init_routes(app):
         "/users/{id}/permissions/{permission_id}",
         users_permissions.revoke_user_permissions,
     )
+
+    # Seasons
+    app.router.add_get("/seasons", seasons.get_seasons)
+    app.router.add_post("/seasons", seasons.create_season)
