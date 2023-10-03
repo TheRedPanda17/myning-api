@@ -17,7 +17,9 @@ async def init(
     max_pool_size=0,
     conn_timeout=5,
 ):
-    dsn = f"dbname={database} user={user} host={host} port={port}"
+    dsn = f"dbname={database} user={user} host={host}"
+    if port:
+        dsn += f" port={port}"
 
     async with asyncio.Lock():
         POOLS[database] = await aiopg.create_pool(
