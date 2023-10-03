@@ -24,6 +24,7 @@ CREATE TABLE "users_seasons" (
 
 ALTER TABLE "users_seasons" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
 ALTER TABLE "users_seasons" ADD FOREIGN KEY ("season_id") REFERENCES "seasons" ("id");
+ALTER TABLE "users_seasons" ADD CONSTRAINT "unique_user_seasons" UNIQUE ("user_id", "season_id");
 
 
 CREATE TABLE "stats" (
