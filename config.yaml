@@ -1,5 +1,10 @@
-postgres:
-  host: db
-  port: 5432
-  user: opc
-  database: myning
+dev:
+  postgres:
+    db: myning
+    host: db
+    port: 5432
+    user: dev
+
+prod:
+  postgres:
+    db: myning
