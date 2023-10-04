@@ -1,5 +1,5 @@
 run:
-	python app.py
+	python main.py
 	
 venv:
 	pyenv install 3.10.8 --skip-existing

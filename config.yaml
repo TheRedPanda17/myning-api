@@ -1,10 +1,11 @@
 dev:
   postgres:
-    host: db
+    database: myning
+    host: localhost
     port: 5432
     user: dev
-    database: myning
 
 prod:
   postgres:
     database: myning
+    user: opc
