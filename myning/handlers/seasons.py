@@ -3,16 +3,13 @@ from myning.utils.auth import authed, permissioned
 from aiohttp import web
 
 from myning.utils.errors import wrap_errors
+from myning.utils.transforming import jsonable
 
 
 @authed
 async def get_seasons(*_, **__):
     seasons = await database.seasons.get_seasons()
-    for season in seasons:
-        season["start_dt"] = str(season["start_dt"])
-        season["end_dt"] = str(season["end_dt"])
-        season["created_dt"] = str(season["created_dt"])
-        season["updated_dt"] = str(season["updated_dt"])
+    seasons = [jsonable(season) for season in seasons]
 
     return web.json_response(data=seasons, status=200)
 
@@ -40,9 +37,4 @@ async def create_season(request: web.Request, *_, **__):
     if not season:
         return web.json_response(status=500)
 
-    season["start_dt"] = str(season["start_dt"])
-    season["end_dt"] = str(season["end_dt"])
-    season["created_dt"] = str(season["created_dt"])
-    season["updated_dt"] = str(season["updated_dt"])
-
-    return web.json_response(data=season, status=200)
+    return web.json_response(data=jsonable(season), status=200)

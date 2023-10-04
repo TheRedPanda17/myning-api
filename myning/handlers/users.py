@@ -3,6 +3,7 @@ from aiohttp import web
 from myning import database
 from myning.utils.auth import authed
 from myning.utils.errors import wrap_errors
+from myning.utils.transforming import jsonable
 
 
 async def create_user(request: web.Request):
@@ -28,19 +29,12 @@ async def create_user(request: web.Request):
     if not result:
         return web.json_response(status=500)
 
-    result["created_dt"] = str(result["created_dt"])
-    result["updated_dt"] = str(result["updated_dt"])
-
-    return web.json_response(data=result, status=200)
+    return web.json_response(data=jsonable(result), status=200)
 
 
 @authed
 async def update_user(request: web.Request, auth_id: int):
-    _id = request.path_qs.split("/")[-1]
-    if _id.isdigit():
-        _id = int(_id)
-    else:
-        return wrap_errors("'id' must be an integer")
+    _id = int(request.match_info["user_id"])
 
     if auth_id != _id:
         return wrap_errors("You do not have access to this resource", status=403)
@@ -71,16 +65,11 @@ async def update_user(request: web.Request, auth_id: int):
     if not result:
         return web.json_response(status=500)
 
-    result["created_dt"] = str(result["created_dt"])
-    result["updated_dt"] = str(result["updated_dt"])
-
-    return web.json_response(data=result, status=200)
+    return web.json_response(data=jsonable(result), status=200)
 
 
 async def get_users(_: web.Request):
     users = await database.users.get_users()
-    for user in users:
-        user["created_dt"] = str(user["created_dt"])
-        user["updated_dt"] = str(user["updated_dt"])
+    users = [jsonable(user) for user in users]
 
     return web.json_response(data=users, status=200)

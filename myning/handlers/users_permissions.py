@@ -3,20 +3,16 @@ from aiohttp import web
 from myning import database
 from myning.utils.auth import authed, permissioned
 from myning.utils.errors import wrap_errors
+from myning.utils.transforming import jsonable
 
 
 @authed
 @permissioned("view_users_permissions")
 async def get_user_permissions(request: web.Request, *_, **__):
-    _id = request.path_qs.split("/")[-2]
-    if _id.isdigit():
-        _id = int(_id)
-    else:
-        return wrap_errors("'id' must be an integer")
+    _id = int(request.match_info["user_id"])
 
     permissions = await database.permissions.get_user_permissions(user_id=_id)
-    for permission in permissions:
-        permission["created_dt"] = str(permission["created_dt"])
+    permissions = [jsonable(permission) for permission in permissions]
 
     return web.json_response(data=permissions, status=200)
 
@@ -24,11 +20,7 @@ async def get_user_permissions(request: web.Request, *_, **__):
 @authed
 @permissioned("grant_users_permissions")
 async def grant_user_permissions(request: web.Request, auth_id: int):
-    _id = request.path_qs.split("/")[-2]
-    if _id.isdigit():
-        _id = int(_id)
-    else:
-        return wrap_errors("'id' must be an integer")
+    user_id = int(request.match_info["user_id"])
 
     content: dict = await request.json()
     errors = []
@@ -37,9 +29,9 @@ async def grant_user_permissions(request: web.Request, auth_id: int):
     if not permission:
         errors.append("'permission' must not be empty")
 
-    user_id = content.get("user_id")
-    if not user_id:
-        errors.append("'user_id' must not be empty")
+    content_user_id = content.get("user_id")
+    if not user_id or content_user_id != user_id:
+        errors.append("'user_id' must not be empty and must match the path")
 
     if errors:
         return wrap_errors(errors)
@@ -58,26 +50,14 @@ async def grant_user_permissions(request: web.Request, auth_id: int):
     if not result:
         return web.json_response(status=500)
 
-    result["created_dt"] = str(result["created_dt"])
-    result["revoked_dt"] = str(result["revoked_dt"])
-
-    return web.json_response(data=result, status=200)
+    return web.json_response(data=jsonable(result), status=200)
 
 
 @authed
 @permissioned("revoke_users_permissions")
 async def revoke_user_permissions(request: web.Request, auth_id: int):
-    user_id = request.path_qs.split("/")[-3]
-    if user_id.isdigit():
-        user_id = int(user_id)
-    else:
-        return wrap_errors("user id must be an integer")
-
-    permission_id = request.path_qs.split("/")[-1]
-    if permission_id.isdigit():
-        permission_id = int(permission_id)
-    else:
-        return wrap_errors("permission id must be an integer")
+    user_id = int(request.match_info["user_id"])
+    permission_id = int(request.match_info["permission_id"])
 
     permission = await database.permissions.get_permission(permission_id)
     if not permission:
@@ -99,7 +79,4 @@ async def revoke_user_permissions(request: web.Request, auth_id: int):
     if not result:
         return web.json_response(status=500)
 
-    result["created_dt"] = str(result["created_dt"])
-    result["revoked_dt"] = str(result["revoked_dt"])
-
-    return web.json_response(data=result, status=200)
+    return web.json_response(data=jsonable(result), status=200)

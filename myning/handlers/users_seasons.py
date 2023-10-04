@@ -3,15 +3,12 @@ from myning import database
 
 from myning.utils.auth import authed
 from myning.utils.errors import wrap_errors
+from myning.utils.transforming import jsonable
 
 
 @authed
 async def create_user_season(request: web.Request, auth_id: int, *_, **__):
-    _id = request.path_qs.split("/")[-2]
-    if _id.isdigit():
-        _id = int(_id)
-    else:
-        return wrap_errors("'id' must be an integer")
+    _id = int(request.match_info["user_id"])
 
     if auth_id != _id:
         return wrap_errors("You do not have access to this resource", status=403)
@@ -42,7 +39,5 @@ async def create_user_season(request: web.Request, auth_id: int, *_, **__):
     user_season = await database.users_seasons.create_user_season(
         season_id=content["season_id"], user_id=auth_id
     )
-    user_season["created_dt"] = str(user_season["created_dt"])
-    user_season["updated_dt"] = str(user_season["updated_dt"])
 
-    return web.json_response(data=user_season, status=200)
+    return web.json_response(data=jsonable(user_season), status=200)

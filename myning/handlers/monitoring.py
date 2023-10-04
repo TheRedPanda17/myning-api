@@ -5,7 +5,7 @@ from myning import database
 
 
 async def ping(_):
-    response = {"up": [], "down": [], "tables": []}
+    response = {"up": [], "down": []}
     conn = await database.POOLS["default"].acquire()
     async with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
         await cursor.execute("SELECT 1+1 AS sum;")
