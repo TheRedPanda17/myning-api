@@ -7,6 +7,7 @@ from myning.handlers import (
     users,
     users_permissions,
     users_seasons,
+    stats,
 )
 
 
@@ -35,4 +36,14 @@ def get_routes():
         web.post("/seasons", seasons.create_season),
         # User Seasons
         web.post("/users/{user_id:\d+}/seasons", users_seasons.create_user_season),
+        # Stats
+        web.get("/users/{user_id:\d+}/seasons/{season_id:\d}/stats", stats.get_stats),
+        web.post(
+            "/users/{user_id:\d+}/seasons/{season_id:\d}/stats/sync", stats.sync_stats
+        ),
+        web.put("/users/{user_id:\d+}/seasons/{season_id:\d}/stats", stats.update_stat),
+        web.post(
+            "/users/{user_id:\d+}/seasons/{season_id:\d}/stats/{key}/increment",
+            stats.increment_stat,
+        ),
     ]

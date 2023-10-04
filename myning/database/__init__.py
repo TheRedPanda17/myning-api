@@ -2,7 +2,7 @@ import asyncio
 
 import aiopg
 
-from . import permissions, seasons, users, users_permissions, users_seasons
+from . import permissions, seasons, users, users_permissions, users_seasons, stats
 
 POOLS: dict[str, aiopg.Pool] = {}
 

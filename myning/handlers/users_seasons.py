@@ -1,3 +1,4 @@
+import functools
 from aiohttp import web
 from myning import database
 
@@ -41,3 +42,32 @@ async def create_user_season(request: web.Request, auth_id: int, *_, **__):
     )
 
     return web.json_response(data=jsonable(user_season), status=200)
+
+
+def user_season(func):
+    """Auth decorator function."""
+
+    @functools.wraps(func)
+    async def wrapper(request: web.Request, auth_id, *args, **kwargs):
+        """Performs analysis of header"""
+        user_id = int(request.match_info["user_id"])
+        season_id = int(request.match_info["season_id"])
+
+        if auth_id != user_id:
+            return wrap_errors("You do not have access to this resource", status=403)
+
+        user_season = await database.users_seasons.get_user_season(
+            user_id=user_id, season_id=season_id
+        )
+        if not user_season:
+            return wrap_errors("User Season not found", status=404)
+
+        return await func(
+            request,
+            auth_id=auth_id,
+            user_season_id=user_season["id"],
+            *args,
+            **kwargs,
+        )
+
+    return wrapper

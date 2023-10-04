@@ -37,3 +37,4 @@ CREATE TABLE "stats" (
 );
 
 ALTER TABLE "stats" ADD FOREIGN KEY ("user_season_id") REFERENCES "users_seasons" ("id");
+ALTER TABLE "stats" ADD CONSTRAINT "unique_stats_key" UNIQUE ("user_season_id", "key");
