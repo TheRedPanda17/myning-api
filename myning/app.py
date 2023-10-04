@@ -1,37 +1,23 @@
 from aiohttp import web
-from myning.routes import init_routes
-from myning.config import get_config
+
+from config import CONFIG
 from myning import database
+from myning.routes import get_routes
 
 
-def init_config(app: web.Application, argv=None) -> None:
-    app["config"] = get_config(argv)
+async def startup(_):
+    """Initalize connections on app startup."""
+    await database.init(**CONFIG["postgres"])
 
 
-async def init_database(app: web.Application) -> None:
-    """
-    This is signal for success creating connection with database
-    """
-    config = app["config"]["postgres"]
-    await database.init(**config)
+async def cleanup(_):
+    """Close connections on app cleanup."""
+    await database.close()
 
 
-async def close_database(app: web.Application) -> None:
-    """
-    This is signal for success closing connection with database before shutdown
-    """
-    app["db"].close()
-    await app["db"].wait_closed()
-
-
-def init_app(argv=None) -> web.Application:
+def get_app():
     app = web.Application()
-    init_routes(app)
-    init_config(app, argv)
-
-    app.on_startup.extend([init_database])
-    app.on_cleanup.extend([close_database])
+    app.add_routes(get_routes())
+    app.on_startup.append(startup)
+    app.on_cleanup.append(cleanup)
     return app
-
-
-app = init_app()

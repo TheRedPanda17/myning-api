@@ -1,7 +1,8 @@
 import asyncio
+
 import aiopg
 
-from . import users, permissions, users_permissions, seasons, users_seasons
+from . import permissions, seasons, users, users_permissions, users_seasons
 
 POOLS: dict[str, aiopg.Pool] = {}
 
@@ -36,7 +37,6 @@ async def init(
 
 async def close():
     """Close postgresql connection pool(s). If no dbname is passed, all pools are closed."""
-
     await asyncio.gather(*(_close_pool(dbname) for dbname in POOLS))
 
 
