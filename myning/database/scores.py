@@ -24,3 +24,39 @@ async def upsert_score(user_season_id: int, score: float):
             print(e)
             return None
         return await cursor.fetchone()
+
+
+async def get_score(user_season_id: int):
+    conn = await database.POOLS["default"].acquire()
+    async with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
+        sql = """
+        SELECT * 
+        FROM scores 
+        WHERE user_season_id = %(user_season_id)s
+        ORDER BY date DESC
+        """
+
+        try:
+            await cursor.execute(sql, {"user_season_id": user_season_id})
+            return await cursor.fetchone()
+        except (psycopg2.DataError, psycopg2.IntegrityError) as e:
+            print(e)
+            return None
+
+
+async def get_scores(user_season_id: int):
+    conn = await database.POOLS["default"].acquire()
+    async with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
+        sql = """
+        SELECT * 
+        FROM scores 
+        WHERE user_season_id = %(user_season_id)s
+        ORDER BY date DESC
+        """
+
+        try:
+            await cursor.execute(sql, {"user_season_id": user_season_id})
+            return await cursor.fetchall()
+        except (psycopg2.DataError, psycopg2.IntegrityError) as e:
+            print(e)
+            return None

@@ -51,4 +51,11 @@ def get_routes():
         web.post(
             "/users/{user_id:\d+}/seasons/{season_id:\d}/scores", scores.create_score
         ),
+        web.get(
+            "/users/{user_id:\d+}/seasons/{season_id:\d}/scores/recent",
+            scores.get_score,
+        ),
+        web.get(
+            "/users/{user_id:\d+}/seasons/{season_id:\d}/scores", scores.get_scores
+        ),
     ]
