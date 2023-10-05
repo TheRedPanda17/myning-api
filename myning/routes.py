@@ -18,6 +18,7 @@ def get_routes():
         # Users
         web.post("/users", users.create_user),
         web.get("/users", users.get_users),
+        web.get("/auth", users.get_user),
         web.put("/users/{user_id:\d+}", users.update_user),
         # Permissions
         web.get("/permissions", permissions.get_permissions),

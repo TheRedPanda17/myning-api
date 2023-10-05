@@ -29,6 +29,8 @@ async def create_user(request: web.Request):
     if not result:
         return web.json_response(status=500)
 
+    del result["password"]
+
     return web.json_response(data=jsonable(result), status=200)
 
 
@@ -65,11 +67,20 @@ async def update_user(request: web.Request, auth_id: int):
     if not result:
         return web.json_response(status=500)
 
+    del result["password"]
+
     return web.json_response(data=jsonable(result), status=200)
 
 
 async def get_users(_: web.Request):
     users = await database.users.get_users()
-    users = [jsonable(user) for user in users]
 
-    return web.json_response(data=users, status=200)
+    return web.json_response(data=jsonable(users), status=200)
+
+
+@authed
+async def get_user(_: web.Request, auth_id: int):
+    user = await database.users.get_user(auth_id)
+    del user["password"]
+
+    return web.json_response(data=jsonable(user), status=200)
