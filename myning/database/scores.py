@@ -60,3 +60,23 @@ async def get_scores(user_season_id: int):
         except (psycopg2.DataError, psycopg2.IntegrityError) as e:
             print(e)
             return None
+
+
+async def get_all_scores():
+    conn = await database.POOLS["default"].acquire()
+    async with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
+        sql = """
+        SELECT DISTINCT ON (user_season_id)
+            id,
+            score,
+            date
+        FROM scores
+        ORDER BY user_season_id ASC, date DESC;
+        """
+
+        try:
+            await cursor.execute(sql)
+            return await cursor.fetchall()
+        except (psycopg2.DataError, psycopg2.IntegrityError) as e:
+            print(e)
+            return None

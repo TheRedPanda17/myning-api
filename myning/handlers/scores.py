@@ -41,3 +41,12 @@ async def get_scores(req, user_season_id: int = None, *_, **__):
         return web.Response(status=204)
 
     return web.json_response(jsonable(scores), status=200)
+
+
+@authed
+async def get_all_scores(*_, **__):
+    scores = await database.scores.get_all_scores()
+    if not scores:
+        return web.Response(status=204)
+
+    return web.json_response(jsonable(scores), status=200)
