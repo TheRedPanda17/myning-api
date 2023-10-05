@@ -8,6 +8,7 @@ from myning.handlers import (
     users_permissions,
     users_seasons,
     stats,
+    scores,
 )
 
 
@@ -45,5 +46,9 @@ def get_routes():
         web.post(
             "/users/{user_id:\d+}/seasons/{season_id:\d}/stats/{key}/increment",
             stats.increment_stat,
+        ),
+        # Scores
+        web.post(
+            "/users/{user_id:\d+}/seasons/{season_id:\d}/scores", scores.create_score
         ),
     ]
