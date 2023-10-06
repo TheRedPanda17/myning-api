@@ -37,6 +37,7 @@ def get_routes():
         web.get("/seasons", seasons.get_seasons),
         web.post("/seasons", seasons.create_season),
         # User Seasons
+        web.get("/users/{user_id:\d+}/seasons", users_seasons.get_user_seasons),
         web.post("/users/{user_id:\d+}/seasons", users_seasons.create_user_season),
         # Stats
         web.get("/users/{user_id:\d+}/seasons/{season_id:\d}/stats", stats.get_stats),

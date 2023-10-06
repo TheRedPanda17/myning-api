@@ -42,3 +42,20 @@ async def get_user_season(user_id: int, season_id):
         except (psycopg2.DataError, psycopg2.IntegrityError) as e:
             print(e)
             return None
+
+
+async def get_user_seasons(user_id: int):
+    conn = await database.POOLS["default"].acquire()
+    async with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
+        sql = """
+        SELECT s.*
+        FROM users_seasons AS us JOIN seasons AS s ON us.season_id = s.id
+        WHERE user_id = %(user_id)s
+        """
+
+        try:
+            await cursor.execute(sql, {"user_id": user_id})
+            return await cursor.fetchall()
+        except (psycopg2.DataError, psycopg2.IntegrityError) as e:
+            print(e)
+            return None

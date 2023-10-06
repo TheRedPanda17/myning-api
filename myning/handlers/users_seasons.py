@@ -71,3 +71,16 @@ def user_season(func):
         )
 
     return wrapper
+
+
+@authed
+async def get_user_seasons(request: web.Request, auth_id: int, *_, **__):
+    user_id = int(request.match_info["user_id"])
+    if user_id != auth_id:
+        return wrap_errors("You do not have access to this collection", status=403)
+
+    seasons = await database.users_seasons.get_user_seasons(user_id)
+    if not seasons:
+        return web.Response(status=204)
+
+    return web.json_response(data=jsonable(seasons), status=200)
